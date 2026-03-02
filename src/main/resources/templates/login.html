@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{css/styles.css}">
+</head>
+<body>
+    <div th:replace="Navbar :: navbar"></div>
+
+
+    <h2>Ingresa a tu cuenta</h2>
+    <form th:action="@{/login}" method="post">
+        <!-- Token de seguridad CSRF (automático con Spring Security) -->
+        
+        <input type="email" name="username" placeholder="Email" required/>
+        <input type="password" name="password" placeholder="Contraseña" required/>
+
+        <!-- Mensaje de error -->
+        <div th:if="${param.error}">
+            Usuario o contraseña incorrectos
+        </div>
+
+        <button type="submit">Iniciar sesión</button>
+    </form>
+</div>
+</body>
+</html>

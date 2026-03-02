@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Panel SuperAdmin</title>
+    <link rel="stylesheet" th:href="@{../css/styles.css}">
+</head>
+<body>
+    <div th:replace="Navbar :: navbar"></div>
+    <h1>Bienvenido SuperAdmin</h1>
+    <nav>
+        <a th:href="@{/admin/productos}">Productos</a>
+        <a th:href="@{/admin/ofertas}">Ofertas</a>
+        <a th:href="@{/admin/supermercados}">Supermercados</a>
+        <a th:href="@{/logout}">Cerrar sesión</a>
+    </nav>
+</body>
+</html>

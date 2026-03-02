@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Panel Administrador</title>
+</head>
+
+<body>
+
+    <nav>
+        <span>Bienvenido, <strong sec:authentication="name"></strong></span>
+        <a th:href="@{/logout}">Cerrar sesión</a>
+    </nav>
+
+    <h1>Panel de Administración</h1>
+
+    <!-- Tarjetas resumen -->
+    <div>
+        <div>
+            <h3>Productos</h3>
+            <p th:text="${totalProductos}">0</p>
+            <a th:href="@{/admin/productos}">Gestionar</a>
+        </div>
+        <div>
+            <h3>Ofertas</h3>
+            <p th:text="${totalOfertas}">0</p>
+            <a th:href="@{/admin/ofertas}">Gestionar</a>
+        </div>
+        <div>
+            <h3>Supermercados</h3>
+            <p th:text="${totalSupermercados}">0</p>
+            <a th:href="@{/admin/supermercados}">Gestionar</a>
+        </div>
+    </div>
+
+    <!-- Solo superadmin ve esto -->
+    <div sec:authorize="hasRole('SUPERADMIN')">
+        <a th:href="@{/superadmin/dashboard}">Panel SuperAdmin</a>
+    </div>
+
+</body>
+
+</html>

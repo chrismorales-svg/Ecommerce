@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Gestión de Usuarios</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+    <div th:replace="~{Navbar :: navbar}"></div>
+
+    <div class="container">
+        <h1>Gestión de Usuarios y Roles</h1>
+        <a th:href="@{/superadmin/dashboard}">← Volver al dashboard</a>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Roles actuales</th>
+                    <th>Asignar rol</th>
+                    <th>Quitar rol</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.email}"></td>
+                    <td>
+                        <span th:each="rol : ${usuario.roles}" th:text="${rol.nombre} + ' '">
+                        </span>
+                    </td>
+                    <td>
+                        <form th:action="@{/superadmin/usuarios/{id}/asignarRol(id=${usuario.id})}" method="post">
+                            <select name="nombreRol">
+                                <option th:each="rol : ${roles}" th:value="${rol.nombre}" th:text="${rol.nombre}">
+                                </option>
+                            </select>
+                            <button type="submit">Asignar</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{/superadmin/usuarios/{id}/quitarRol(id=${usuario.id})}" method="post">
+                            <select name="nombreRol">
+                                <option th:each="rol : ${usuario.roles}" th:value="${rol.nombre}"
+                                    th:text="${rol.nombre}">
+                                </option>
+                            </select>
+                            <button type="submit">Quitar</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

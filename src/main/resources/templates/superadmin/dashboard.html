@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Panel SuperAdmin</title>
-    <link rel="stylesheet" th:href="@{../css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
+
 <body>
-    <div th:replace="Navbar :: navbar"></div>
-    <h1>Bienvenido SuperAdmin</h1>
-    <nav>
-        <a th:href="@{/admin/productos}">Productos</a>
-        <a th:href="@{/admin/ofertas}">Ofertas</a>
-        <a th:href="@{/admin/supermercados}">Supermercados</a>
-        <a th:href="@{/logout}">Cerrar sesión</a>
-    </nav>
+    <div th:replace="~{Navbar :: navbar}"></div>
+
+    <div class="container">
+        <h1>Panel SuperAdmin</h1>
+
+        <!-- Tarjetas resumen -->
+        <div class="cards">
+            <div class="card">
+                <h3>Productos</h3>
+                <p th:text="${totalProductos}">0</p>
+                <a th:href="@{/superadmin/productos}">Gestionar</a>
+            </div>
+            <div class="card">
+                <h3>Ofertas</h3>
+                <p th:text="${totalOfertas}">0</p>
+                <a th:href="@{/superadmin/ofertas}">Gestionar</a>
+            </div>
+            <div class="card">
+                <h3>Supermercados</h3>
+                <p th:text="${totalSupermercados}">0</p>
+                <a th:href="@{/superadmin/supermercados}">Gestionar</a>
+            </div>
+            <div class="card">
+                <h3>Usuarios</h3>
+                <p th:text="${totalUsuarios}">0</p>
+                <a th:href="@{/superadmin/usuarios}">Gestionar roles</a>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+
+/* ── Hero ── */
+.hero {
+    background:
+        radial-gradient(ellipse at 70% 50%, rgba(61,220,132,0.07) 0%, transparent 60%),
+        #0d0f0e;
+    border-bottom: 1px solid #2a3330;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #e8f0ed;
+    letter-spacing: -1.5px;
+    margin-bottom: 0.75rem;
+}
+
+.hero h1 span {
+    color: #3ddc84;
+}
+
+.hero p {
+    color: #6b8278;
+    font-size: 1.05rem;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+/* ── Section ── */
+.section {
+    padding: 2.5rem 2rem;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+}
+
+.section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #e8f0ed;
+    letter-spacing: -0.5px;
+}
+
+.section-title span {
+    color: #3ddc84;
+}
+
+/* ── Carousel controls ── */
+.carousel-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.carousel-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid #2a3330;
+    background: #141917;
+    color: #e8f0ed;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.carousel-btn:hover {
+    border-color: #3ddc84;
+    color: #3ddc84;
+    background: rgba(61,220,132,0.1);
+}
+
+/* ── Carousel track ── */
+.carousel-wrapper {
+    position: relative;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 1.25rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 0.5rem;
+}
+
+.carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+/* ── Product Card ── */
+.product-card {
+    background: #141917;
+    border: 1px solid #2a3330;
+    border-radius: 12px;
+    min-width: 220px;
+    max-width: 220px;
+    overflow: hidden;
+    transition: all 0.25s;
+    flex-shrink: 0;
+}
+
+.product-card:hover {
+    border-color: #3ddc84;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(61,220,132,0.12);
+}
+
+.product-image {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    background: #1c2220;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+.no-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    background: #1c2220;
+}
+
+.product-info {
+    padding: 1rem;
+}
+
+.product-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #e8f0ed;
+    margin-bottom: 0.35rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-description {
+    font-size: 0.8rem;
+    color: #6b8278;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+}
+
+.product-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.product-price {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #3ddc84;
+}
+
+.product-store {
+    font-size: 0.72rem;
+    color: #6b8278;
+    background: #1c2220;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+.btn-buy {
+    width: 100%;
+    background: rgba(61,220,132,0.12);
+    color: #3ddc84;
+    border: 1px solid rgba(61,220,132,0.3);
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.55rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-buy:hover {
+    background: #3ddc84;
+    color: #0d0f0e;
+}
+
+/* ── Empty state ── */
+.empty-carousel {
+    text-align: center;
+    padding: 3rem;
+    color: #6b8278;
+    background: #141917;
+    border: 1px dashed #2a3330;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    width: 100%;
+}

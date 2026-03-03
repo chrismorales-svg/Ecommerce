@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Gestión de Productos</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+    <div th:replace="~{Navbar :: navbar}"></div>
+
+    <div class="container">
+        <h1>Gestión de Productos</h1>
+        <a th:href="@{/superadmin/dashboard}">← Volver al dashboard</a>
+
+        <!-- Formulario crear producto -->
+        <div class="form-section">
+            <h2>Agregar Producto</h2>
+            <form th:action="@{/superadmin/productos/guardar}" method="post" th:object="${producto}"
+                enctype="multipart/form-data">
+                <div>
+                    <label>Nombre</label>
+                    <input type="text" th:field="*{nombre}" placeholder="Nombre del producto" required />
+                </div>
+                <div>
+                    <label>Descripción</label>
+                    <textarea th:field="*{descripcion}" placeholder="Descripción"></textarea>
+                </div>
+                <div>
+                    <label>Precio</label>
+                    <input type="number" step="0.01" th:field="*{precio}" placeholder="0.00" required />
+                </div>
+                <div>
+                    <label>Imagen</label>
+                    <input type="file" name="archivoImagen" accept="image/*" />
+                </div>
+                <div>
+                    <label>Supermercado</label>
+                    <!-- ← name="supermercadoId" en lugar de th:field="*{supermercado}" -->
+                    <select name="supermercadoId">
+                        <option value="">-- Seleccionar supermercado --</option>
+                        <option th:each="s : ${supermercados}" th:value="${s.id}" th:text="${s.nombre}">
+                        </option>
+                    </select>
+                </div>
+                <button type="submit">Guardar Producto</button>
+            </form>
+        </div>
+
+        <!-- Tabla de productos -->
+        <div class="table-section">
+            <h2>Productos registrados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Supermercado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${productos}">
+                        <td th:text="${p.id}"></td>
+                        <td th:text="${p.nombre}"></td>
+                        <td th:text="${p.descripcion}"></td>
+                        <td th:text="${'$' + p.precio}"></td>
+                        <td th:text="${p.supermercado != null ? p.supermercado.nombre : 'Sin asignar'}"></td>
+                        <td>
+                            <a th:href="@{/superadmin/productos/eliminar/{id}(id=${p.id})}"
+                                onclick="return confirm('¿Eliminar este producto?')">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(productos)}">
+                        <td colspan="6">No hay productos registrados</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

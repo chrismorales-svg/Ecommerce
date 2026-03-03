@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Gestión de Supermercados</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+    <div th:replace="~{Navbar :: navbar}"></div>
+
+    <div class="container">
+        <h1>Gestión de Supermercados</h1>
+        <a th:href="@{/superadmin/dashboard}">← Volver al dashboard</a>
+
+        <!-- Formulario crear supermercado -->
+        <div class="form-section">
+            <h2>Agregar Supermercado</h2>
+            <form th:action="@{/superadmin/supermercados/guardar}" method="post" th:object="${supermercado}"
+                enctype="multipart/form-data">
+                <div>
+                    <label>Nombre</label>
+                    <input type="text" th:field="*{nombre}" placeholder="Nombre del supermercado" required />
+                </div>
+                <div>
+                    <label>Dirección</label>
+                    <input type="text" th:field="*{direccion}" placeholder="Dirección" />
+                </div>
+                <div>
+                    <label>Teléfono</label>
+                    <input type="text" th:field="*{telefono}" placeholder="Teléfono" />
+                </div>
+                <div>
+                    <label>Logo</label>
+                    <input type="file" name="archivoLogo" accept="image/*" />
+                </div>
+                <button type="submit">Guardar Supermercado</button>
+            </form>
+        </div>
+
+        <!-- Tabla de supermercados -->
+        <div class="table-section">
+            <h2>Supermercados registrados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Dirección</th>
+                        <th>Teléfono</th>
+                        <th>Logo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="s : ${supermercados}">
+                        <td th:text="${s.id}"></td>
+                        <td th:text="${s.nombre}"></td>
+                        <td th:text="${s.direccion}"></td>
+                        <td th:text="${s.telefono}"></td>
+                        <td>
+                            <img th:if="${s.logo != null and !s.logo.isEmpty()}" th:src="${s.logo}" width="50"
+                                height="50" style="object-fit:cover" />
+                            <span th:unless="${s.logo != null and !s.logo.isEmpty()}">
+                                Sin logo
+                            </span>
+                        </td>
+                        <td>
+                            <a th:href="@{/superadmin/supermercados/eliminar/{id}(id=${s.id})}"
+                                onclick="return confirm('¿Eliminar este supermercado?')">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(supermercados)}">
+                        <td colspan="6">No hay supermercados registrados</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

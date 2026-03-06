@@ -128,6 +128,21 @@
             track.scrollBy({ left: amount, behavior: 'smooth' });
         }
     </script>
+    <script>
+        // Función que ya tienes para los botones
+        function scrollCarousel(id, amount) {
+            const track = document.getElementById(id);
+            track.scrollLeft += amount;
+        }
+
+        // ✅ Scroll con la rueda del mouse
+        const track = document.getElementById('productos-track');
+
+        track.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            track.scrollLeft += e.deltaY;
+        }, { passive: false });
+    </script>
 
 </body>
 

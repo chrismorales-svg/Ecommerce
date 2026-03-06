@@ -8,7 +8,17 @@
 </head>
 <body>
     <div th:fragment="navbar">
-        <h1>hola esta es la barra de navegacion</h1>
+        <div class="navbar-search">
+            <input 
+                type="text" 
+                class="search-input" 
+                placeholder="Buscar productos..."
+            />
+            <button class="search-btn">
+                🔍
+            </button>
+        </div>
+
         <nav class="navbar">
             
             <ul class="navbar1">

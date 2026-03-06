@@ -48,6 +48,11 @@ nav, .navbar {
     backdrop-filter: blur(8px);
 }
 
+ul, li{
+    list-style: none;
+    display: inline-block;
+}
+
 nav .brand, .navbar .brand {
     font-family: var(--font-head);
     font-weight: 800;

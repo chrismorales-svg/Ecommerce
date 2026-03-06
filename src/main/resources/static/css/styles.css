@@ -4,16 +4,16 @@
 
 
 :root {
-    --bg:         #0d0f0e;
-    --surface:    #141917;
-    --surface2:   #1c2220;
+    --bg:         #F4F4F4;
+    --surface:    #F4F4F4;
+    --surface2:   #F4F4F4;
     --border:     #2a3330;
     --accent:     #3ddc84;
     --accent-dim: #2ab86a;
     --accent-glow:rgba(61,220,132,0.15);
     --danger:     #ff5c5c;
     --warn:       #f5a623;
-    --text:       #e8f0ed;
+    --text:       #000000;
     --text-muted: #6b8278;
     --radius:     10px;
     --font-head:  'Syne', sans-serif;

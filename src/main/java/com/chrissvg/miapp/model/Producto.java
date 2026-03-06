@@ -23,13 +23,23 @@ public class Producto {
     private String descripcion;
     private Double precio;
     private String imagen;
+    private String categoria;
 
     @ManyToOne
     @JoinColumn(name = "supermercado_id")
     private Supermercado supermercado;
+    
 
-    public Long getId() {
+    public Long getId() {   
         return id;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 
     public void setId(Long id) {

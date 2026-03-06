@@ -1,26 +1,39 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
     <link rel="stylesheet" th:href="@{css/styles.css}">
 </head>
+
 <body>
     <div th:fragment="navbar">
-        <div class="navbar-search">
-            <input 
-                type="text" 
-                class="search-input" 
-                placeholder="Buscar productos..."
-            />
-            <button class="search-btn">
-                🔍
-            </button>
+        <div class="navbar-top">
+            <div class="navbar-search">
+                <input type="text" class="search-input" placeholder="Buscar productos..." />
+                <button class="search-btn">🔍</button>
+            </div>
+
+            <!-- Usuario logueado -->
+            <div class="navbar-user" sec:authorize="isAuthenticated()">
+                <div class="user-info">
+                    <img class="user-avatar"
+                        th:src="${fotoUsuario != null ? fotoUsuario : '/images/default-avatar.png'}"
+                        alt="Foto de perfil" onerror="this.src='/images/default-avatar.png'" />
+                    <span class="user-name" th:text="${nombreUsuario}"></span>
+                </div>
+                <a href="/logout" class="btn-logout">Salir</a>
+            </div>
+
+            <!-- No logueado -->
+            <div class="navbar-auth" sec:authorize="!isAuthenticated()">
+                <a href="/creacuenta">Crea tu cuenta</a>
+                <a href="/login" class="btn-login">Ingresa</a>
+            </div>
         </div>
 
         <nav class="navbar">
-            
             <ul class="navbar1">
                 <li><a href="/">Categorias</a></li>
                 <li><a href="/about">Ofertas</a></li>
@@ -28,11 +41,10 @@
                 <li><a href="/services">Moda</a></li>
             </ul>
             <ul class="navbar2">
-                <li><a href="/creacuenta">Crea tu cuenta</a></li>
-                <li><a href="/login">Ingresa</a></li>
                 <li><a href="/carrito">Mis compras</a></li>
             </ul>
         </nav>
     </div>
 </body>
+
 </html>

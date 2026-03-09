@@ -79,9 +79,4 @@ public class MainController {
         return "creacuenta";
     }
 
-    @GetMapping({ "/carrito" })
-    public String mostrarcarrito(Model model, Authentication authentication) {
-        agregarDatosUsuario(model, authentication); // ← Añade foto y nombre
-        return "miscompras";
-    }
 }

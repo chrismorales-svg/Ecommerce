@@ -51,7 +51,14 @@
                                 th:text="${producto.supermercado.nombre}">
                             </span>
                         </div>
-                        <button class="btn-buy">Comprar</button>
+
+                        <!-- ✅ th:action incluye CSRF automáticamente en Spring Security 6+ -->
+                        <form th:action="@{/carrito/agregar}" method="post">
+                            <input type="hidden" name="productoId" th:value="${producto.id}" />
+                            <input type="hidden" name="cantidad" value="1" />
+                            <button type="submit" class="btn-buy">🛒 Comprar</button>
+                        </form>
+
                     </div>
                 </div>
 
@@ -106,7 +113,14 @@
                                 th:text="${producto.supermercado.nombre}">
                             </span>
                         </div>
-                        <button class="btn-buy">Comprar</button>
+
+                        <!-- ✅ th:action incluye CSRF automáticamente en Spring Security 6+ -->
+                        <form th:action="@{/carrito/agregar}" method="post">
+                            <input type="hidden" name="productoId" th:value="${producto.id}" />
+                            <input type="hidden" name="cantidad" value="1" />
+                            <button type="submit" class="btn-buy">🛒 Comprar</button>
+                        </form>
+
                     </div>
                 </div>
             </div>
@@ -127,17 +141,9 @@
             const track = document.getElementById(id);
             track.scrollBy({ left: amount, behavior: 'smooth' });
         }
-    </script>
-    <script>
-        // Función que ya tienes para los botones
-        function scrollCarousel(id, amount) {
-            const track = document.getElementById(id);
-            track.scrollLeft += amount;
-        }
 
-        // ✅ Scroll con la rueda del mouse
+        // Scroll con la rueda del mouse
         const track = document.getElementById('productos-track');
-
         track.addEventListener('wheel', (e) => {
             e.preventDefault();
             track.scrollLeft += e.deltaY;

@@ -22,9 +22,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                // ← Elimina todo el bloque .headers() por ahora
+                
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/creacuenta", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/login", "/creacuenta", "/css/**", "/js/**", "/images/**", "/api/**").permitAll()
                         .requestMatchers("/superadmin/**").hasRole("SUPERADMIN")
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                         .requestMatchers("/usuario/**").hasAnyRole("USUARIO", "ADMIN", "SUPERADMIN")

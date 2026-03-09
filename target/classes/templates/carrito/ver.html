@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Carrito</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <style>
+        .carrito-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .carrito-title {
+            font-size: 2rem;
+            margin-bottom: 24px;
+        }
+
+        .carrito-title span {
+            color: var(--color-primary, #4CAF50);
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+        }
+
+        .carrito-vacio {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .carrito-vacio p {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+        }
+
+        .carrito-tabla {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .carrito-tabla thead {
+            background: #f5f5f5;
+        }
+
+        .carrito-tabla th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .carrito-tabla td {
+            padding: 14px 16px;
+            border-top: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .carrito-tabla img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .no-img-carrito {
+            width: 64px;
+            height: 64px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .cantidad-form {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cantidad-form input[type="number"] {
+            width: 60px;
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .btn-actualizar {
+            background: #f0f0f0;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-actualizar:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-eliminar {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-eliminar:hover {
+            background: #fecaca;
+        }
+
+        .carrito-resumen {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .carrito-total {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .carrito-total span {
+            color: var(--color-primary, #4CAF50);
+        }
+
+        .carrito-acciones {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-seguir {
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-seguir:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-vaciar {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-vaciar:hover {
+            background: #fecaca;
+        }
+
+        .btn-pagar {
+            background: var(--color-primary, #4CAF50);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .btn-pagar:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:replace="~{Navbar :: navbar}"></div>
+
+    <div class="carrito-container">
+        <h2 class="carrito-title">🛒 Mi <span>Carrito</span></h2>
+
+        <!-- Mensaje flash -->
+        <div th:if="${mensaje}" class="alert-success" th:text="${mensaje}"></div>
+
+        <!-- Carrito vacío -->
+        <div class="carrito-vacio" th:if="${carrito.items.empty}">
+            <p>Tu carrito está vacío 😕</p>
+            <a th:href="@{/}" class="btn-seguir">← Volver a la tienda</a>
+        </div>
+
+        <!-- Tabla de items -->
+        <div th:unless="${carrito.items.empty}">
+            <table class="carrito-tabla">
+                <thead>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${carrito.items}">
+                        <td>
+                            <img th:if="${item.producto.imagen != null and !item.producto.imagen.isEmpty()}"
+                                th:src="${item.producto.imagen}" th:alt="${item.producto.nombre}" />
+                            <div class="no-img-carrito"
+                                th:unless="${item.producto.imagen != null and !item.producto.imagen.isEmpty()}">
+                                🛒
+                            </div>
+                        </td>
+                        <td>
+                            <strong th:text="${item.producto.nombre}">Nombre</strong>
+                            <br />
+                            <small th:if="${item.producto.supermercado != null}"
+                                th:text="${item.producto.supermercado.nombre}" style="color:#888;"></small>
+                        </td>
+                        <td th:text="${'$' + #numbers.formatDecimal(item.producto.precio, 0, 'COMMA', 0, 'POINT')}">$0
+                        </td>
+                        <td>
+                            <form th:action="@{/carrito/actualizar}" method="post" class="cantidad-form">
+                                <input type="hidden" name="itemId" th:value="${item.id}" />
+                                <input type="number" name="cantidad" th:value="${item.cantidad}" min="1" />
+                                <button type="submit" class="btn-actualizar" title="Actualizar">↻</button>
+                            </form>
+                        </td>
+                        <td th:text="${'$' + #numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')}">$0</td>
+                        <td>
+                            <form th:action="@{/carrito/eliminar}" method="post">
+                                <input type="hidden" name="itemId" th:value="${item.id}" />
+                                <button type="submit" class="btn-eliminar">🗑 Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="carrito-resumen">
+                <div class="carrito-total">
+                    Total: <span
+                        th:text="${'$' + #numbers.formatDecimal(carrito.total, 0, 'COMMA', 0, 'POINT')}">$0</span>
+                </div>
+                <div class="carrito-acciones">
+                    <a th:href="@{/}" class="btn-seguir">← Seguir comprando</a>
+                    <form th:action="@{/carrito/vaciar}" method="post">
+                        <button type="submit" class="btn-vaciar">🗑 Vaciar carrito</button>
+                    </form>
+                    <button class="btn-pagar">💳 Proceder al pago</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

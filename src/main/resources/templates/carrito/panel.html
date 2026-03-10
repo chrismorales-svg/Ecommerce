@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div th:fragment="panelCarrito">
+
+        <!-- Carrito vacío -->
+        <div class="panel-vacio" th:if="${carrito.items.empty}">
+            <p style="font-size:2rem;">🛒</p>
+            <p>Tu carrito está vacío</p>
+            <a href="/" style="color:#22c55e;text-decoration:none;font-weight:600;">← Ver productos</a>
+        </div>
+
+        <!-- Items -->
+        <div th:unless="${carrito.items.empty}">
+            <div class="panel-item" th:each="item : ${carrito.items}">
+
+                <!-- Imagen -->
+                <img th:if="${item.producto.imagen != null and !item.producto.imagen.isEmpty()}"
+                    th:src="${item.producto.imagen}" th:alt="${item.producto.nombre}" />
+                <div class="no-img-panel"
+                    th:unless="${item.producto.imagen != null and !item.producto.imagen.isEmpty()}">
+                    🛒
+                </div>
+
+                <!-- Info -->
+                <div class="panel-item-info">
+                    <div class="panel-item-nombre" th:text="${item.producto.nombre}">Nombre</div>
+                    <div class="panel-item-super" th:if="${item.producto.supermercado != null}"
+                        th:text="${item.producto.supermercado.nombre}"></div>
+                    <div class="panel-item-precio"
+                        th:text="${'$' + #numbers.formatDecimal(item.producto.precio, 0, 'COMMA', 0, 'POINT')}">$0</div>
+
+                    <!-- Actualizar cantidad -->
+                    <form th:action="@{/carrito/actualizar}" method="post" class="panel-item-cantidad">
+                        <input type="hidden" name="itemId" th:value="${item.id}" />
+                        <input type="number" name="cantidad" th:value="${item.cantidad}" min="1" />
+                        <button type="submit" class="panel-btn-act" title="Actualizar">↻</button>
+                    </form>
+                </div>
+
+                <!-- Eliminar -->
+                <form th:action="@{/carrito/eliminar}" method="post">
+                    <input type="hidden" name="itemId" th:value="${item.id}" />
+                    <button type="submit" class="panel-btn-elim">🗑</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer con total y acciones (solo si hay items) -->
+        <div th:unless="${carrito.items.empty}"
+            style="position:sticky;bottom:0;background:#fff;border-top:2px solid #f0f0f0;padding:20px 0 0 0;margin-top:16px;">
+            <div class="panel-total">
+                <span>Total</span>
+                <span th:text="${'$' + #numbers.formatDecimal(carrito.total, 0, 'COMMA', 0, 'POINT')}">$0</span>
+            </div>
+            <div class="panel-acciones">
+                <form th:action="@{/carrito/vaciar}" method="post" style="flex:1;">
+                    <button type="submit" class="panel-btn-vaciar" style="width:100%;">🗑 Vaciar</button>
+                </form>
+                <button class="panel-btn-pagar">💳 Pagar</button>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

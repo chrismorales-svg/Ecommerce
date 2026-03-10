@@ -21,8 +21,9 @@ public class CarritoController {
 
     /** Extrae el email del usuario sin importar si es OAuth2 o form login */
     private String getEmail(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RuntimeException("Usuario no autenticado");
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())) {
+            return null; // No autenticado
         }
         Object principal = authentication.getPrincipal();
         if (principal instanceof OAuth2User oauthUser) {
@@ -35,7 +36,11 @@ public class CarritoController {
     /** Ver el carrito */
     @GetMapping
     public String verCarrito(Authentication authentication, Model model) {
-        Carrito carrito = carritoService.obtenerOCrearCarrito(getEmail(authentication));
+        String email = getEmail(authentication);
+        if (email == null)
+            return "redirect:/login";
+
+        Carrito carrito = carritoService.obtenerOCrearCarrito(email);
         model.addAttribute("carrito", carrito);
         return "carrito/ver";
     }
@@ -46,7 +51,11 @@ public class CarritoController {
             @RequestParam Long productoId,
             @RequestParam(defaultValue = "1") int cantidad,
             RedirectAttributes redirect) {
-        carritoService.agregarProducto(getEmail(authentication), productoId, cantidad);
+        String email = getEmail(authentication);
+        if (email == null)
+            return "redirect:/login";
+
+        carritoService.agregarProducto(email, productoId, cantidad);
         redirect.addFlashAttribute("mensaje", "Producto agregado al carrito ✓");
         return "redirect:/carrito";
     }
@@ -69,7 +78,22 @@ public class CarritoController {
     /** Vaciar todo el carrito */
     @PostMapping("/vaciar")
     public String vaciar(Authentication authentication) {
-        carritoService.vaciarCarrito(getEmail(authentication));
+        String email = getEmail(authentication);
+        if (email == null)
+            return "redirect:/login";
+
+        carritoService.vaciarCarrito(email);
         return "redirect:/carrito";
+    }
+
+    @GetMapping("/panel")
+    public String panelCarrito(Authentication authentication, Model model) {
+        String email = getEmail(authentication);
+        if (email == null)
+            return "redirect:/login";
+
+        Carrito carrito = carritoService.obtenerOCrearCarrito(email);
+        model.addAttribute("carrito", carrito);
+        return "carrito/panel"; // → resources/templates/carrito/panel.html
     }
 }

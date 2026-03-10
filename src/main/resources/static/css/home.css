@@ -1,9 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
 
+
+:root {
+    --fontfamily: 'Syne', sans-serif;
+}
+
 /* ── Hero ── */
 .hero {
     background:
-        radial-gradient(ellipse at 70% 50%, rgba(61,220,132,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 50%, rgba(61, 220, 132, 0.07) 0%, transparent 60%),
         #0d0f0e;
     border-bottom: 1px solid #2a3330;
     padding: 4rem 2rem;
@@ -11,7 +16,7 @@
 }
 
 .hero h1 {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--fontfamily);
     font-size: 2.8rem;
     font-weight: 800;
     color: #000000;
@@ -45,7 +50,7 @@
 }
 
 .section-title {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--fontfamily);
     font-size: 1.3rem;
     font-weight: 800;
     color: #000000;
@@ -80,7 +85,7 @@
 .carousel-btn:hover {
     border-color: #3ddc84;
     color: #3ddc84;
-    background: rgba(61,220,132,0.1);
+    background: rgba(61, 220, 132, 0.1);
 }
 
 /* ── Carousel track ── */
@@ -117,7 +122,7 @@
 .product-card:hover {
     border-color: #3ddc84;
     transform: translateY(-4px);
-    box-shadow: 0 8px 32px rgba(61,220,132,0.12);
+    box-shadow: 0 8px 32px rgba(61, 220, 132, 0.12);
 }
 
 .product-image {
@@ -153,7 +158,7 @@
 }
 
 .product-title {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--fontfamily);
     font-size: 0.82rem;
     font-weight: 700;
     color: #000000;
@@ -182,7 +187,7 @@
 }
 
 .product-price {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--fontfamily);
     font-size: 0.95rem;
     font-weight: 800;
     color: #3ddc84;
@@ -198,11 +203,11 @@
 
 .btn-buy {
     width: 100%;
-    background: rgba(61,220,132,0.12);
+    background: rgba(61, 220, 132, 0.12);
     color: #3ddc84;
-    border: 1px solid rgba(61,220,132,0.3);
+    border: 1px solid rgba(61, 220, 132, 0.3);
     border-radius: 7px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--fontfamily);
     font-size: 0.78rem;
     font-weight: 700;
     padding: 0.45rem;
@@ -270,5 +275,239 @@
     .categoria-section {
         flex-basis: 100%;
         max-width: 100%;
+    }
+}
+
+.hero-carousel {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 340px;
+}
+
+.hero-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.55s cubic-bezier(.4, 0, .2, 1);
+}
+
+.hero-slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.slide-1 {
+    background: linear-gradient(135deg, #1a1a6e 0%, #6b21a8 50%, #ec4899 100%);
+}
+
+.slide-2 {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #10b981 100%);
+}
+
+.slide-3 {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 50%, #7c3aed 100%);
+}
+
+.slide-content {
+    z-index: 2;
+    color: white;
+}
+
+.slide-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+}
+
+.slide-content h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 0 0 12px 0;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.slide-content h1 em {
+    font-style: normal;
+    color: #fde047;
+}
+
+.slide-content p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0 0 24px 0;
+}
+
+.slide-content p strong {
+    font-size: 1.4rem;
+    color: #fde047;
+}
+
+.slide-btn {
+    display: inline-block;
+    background: white;
+    color: #1a1a2e;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.slide-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+}
+
+.slide-deco {
+    font-size: 9rem;
+    opacity: 0.2;
+    position: absolute;
+    right: 120px;
+    user-select: none;
+    pointer-events: none;
+}
+
+.hero-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    line-height: 1;
+}
+
+.hero-arrow:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.hero-arrow-left {
+    left: 20px;
+}
+
+.hero-arrow-right {
+    right: 20px;
+}
+
+.hero-dots {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.hero-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.hero-dot.activo {
+    background: white;
+    width: 24px;
+    border-radius: 4px;
+}
+
+/* Tarjetas */
+.info-cards {
+    display: flex;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.info-cards::-webkit-scrollbar {
+    display: none;
+}
+
+.info-card {
+    flex: 1;
+    min-width: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 12px;
+    text-decoration: none;
+    color: #333;
+    border-right: 1px solid #f0f0f0;
+    transition: background 0.2s;
+    text-align: center;
+}
+
+.info-card:last-child {
+    border-right: none;
+}
+
+.info-card:hover {
+    background: #f9fafb;
+    color: #22c55e;
+}
+
+.info-card-icon {
+    width: 52px;
+    height: 52px;
+    background: #f3f4f6;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    transition: background 0.2s;
+}
+
+.info-card:hover .info-card-icon {
+    background: #dcfce7;
+}
+
+.info-card span {
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+@media (max-width: 768px) {
+    .hero-slide {
+        padding: 0 50px;
+    }
+
+    .slide-content h1 {
+        font-size: 2rem;
+    }
+
+    .slide-deco {
+        font-size: 5rem;
+        right: 40px;
     }
 }

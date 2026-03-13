@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${supermercado.nombre}">Supermercado</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <style>
+        .super-hero {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            max-width: 1100px;
+            margin: 40px auto 32px;
+            padding: 0 24px;
+            flex-wrap: wrap;
+        }
+
+        .super-hero-logo {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-logo-hero {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .super-hero-info h1 {
+            font-size: 2rem;
+            margin-bottom: 6px;
+        }
+
+        .super-hero-info h1 span {
+            color: var(--color-primary, #4CAF50);
+        }
+
+        .super-hero-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .super-hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-volver {
+            display: inline-block;
+            margin: 0 24px 32px;
+            color: #555;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-volver:hover {
+            color: #222;
+        }
+
+        /* Reutiliza los estilos de categorias del home */
+        .super-contenido {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+
+        .sin-productos {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        /* Badge contador total */
+        .total-badge {
+            display: inline-block;
+            background: var(--color-primary, #4CAF50);
+            color: white;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:replace="~{Navbar :: navbar}"></div>
+
+    <!-- Header del supermercado -->
+    <div class="super-hero">
+        <img class="super-hero-logo" th:if="${supermercado.logo != null and !supermercado.logo.isEmpty()}"
+            th:src="${supermercado.logo}" th:alt="${supermercado.nombre}" />
+        <div class="no-logo-hero" th:unless="${supermercado.logo != null and !supermercado.logo.isEmpty()}">
+            🏪
+        </div>
+
+        <div class="super-hero-info">
+            <h1>
+                <span th:text="${supermercado.nombre}">Nombre</span>
+                <span class="total-badge" th:text="${productos.size()} + ' productos'">0 productos</span>
+            </h1>
+            <div class="super-hero-meta">
+                <span th:if="${supermercado.direccion != null and !supermercado.direccion.isEmpty()}">
+                    📍 <span th:text="${supermercado.direccion}">Dirección</span>
+                </span>
+                <span th:if="${supermercado.telefono != null and !supermercado.telefono.isEmpty()}">
+                    📞 <span th:text="${supermercado.telefono}">Teléfono</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <a th:href="@{/tienda}" class="btn-volver">← Volver a la tienda</a>
+
+    <!-- Sin productos -->
+    <div class="sin-productos" th:if="${productos.isEmpty()}">
+        <p>Este supermercado no tiene productos disponibles aún.</p>
+    </div>
+
+    <!-- Productos agrupados por categoría -->
+    <div class="super-contenido" th:unless="${productos.isEmpty()}">
+
+        <!-- Si hay categorías definidas -->
+        <div th:if="${!categorias.isEmpty()}">
+            <div class="categoria-section" th:each="entry : ${categorias}">
+
+                <div class="categoria-header">
+                    <div class="categoria-title-group">
+                        <span class="categoria-badge" th:text="${entry.value.size()} + ' productos'">0</span>
+                        <h3 class="categoria-name" th:text="${entry.key}">Categoría</h3>
+                    </div>
+                </div>
+
+                <div class="categoria-grid">
+                    <div class="product-card" th:each="producto : ${entry.value}">
+                        <div class="product-image">
+                            <img th:if="${producto.imagen != null and !producto.imagen.isEmpty()}"
+                                th:src="${producto.imagen}" th:alt="${producto.nombre}" />
+                            <div class="no-img" th:unless="${producto.imagen != null and !producto.imagen.isEmpty()}">
+                                🛒
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title" th:text="${producto.nombre}">Nombre</h3>
+                            <p class="product-description" th:text="${producto.descripcion}">Descripción</p>
+                            <div class="product-meta">
+                                <span class="product-price"
+                                    th:text="${'$' + #numbers.formatDecimal(producto.precio, 0, 'COMMA', 0, 'POINT')}">
+                                    $0
+                                </span>
+                            </div>
+                            <form th:action="@{/carrito/agregar}" method="post">
+                                <input type="hidden" name="productoId" th:value="${producto.id}" />
+                                <input type="hidden" name="cantidad" value="1" />
+                                <button type="submit" class="btn-buy">🛒 Comprar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Si ningún producto tiene categoría, mostrar grid plano -->
+        <div th:if="${categorias.isEmpty()}">
+            <div class="categoria-grid">
+                <div class="product-card" th:each="producto : ${productos}">
+                    <div class="product-image">
+                        <img th:if="${producto.imagen != null and !producto.imagen.isEmpty()}"
+                            th:src="${producto.imagen}" th:alt="${producto.nombre}" />
+                        <div class="no-img" th:unless="${producto.imagen != null and !producto.imagen.isEmpty()}">
+                            🛒
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title" th:text="${producto.nombre}">Nombre</h3>
+                        <p class="product-description" th:text="${producto.descripcion}">Descripción</p>
+                        <div class="product-meta">
+                            <span class="product-price"
+                                th:text="${'$' + #numbers.formatDecimal(producto.precio, 0, 'COMMA', 0, 'POINT')}">
+                                $0
+                            </span>
+                        </div>
+                        <form th:action="@{/carrito/agregar}" method="post">
+                            <input type="hidden" name="productoId" th:value="${producto.id}" />
+                            <input type="hidden" name="cantidad" value="1" />
+                            <button type="submit" class="btn-buy">🛒 Comprar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

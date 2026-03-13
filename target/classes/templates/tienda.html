@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda - Supermercados</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <style>
+        .tienda-hero {
+            text-align: center;
+            padding: 48px 20px 32px;
+        }
+
+        .tienda-hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+
+        .tienda-hero h1 span {
+            color: var(--color-primary, #4CAF50);
+        }
+
+        .tienda-hero p {
+            color: #666;
+            font-size: 1.05rem;
+        }
+
+        .supermercados-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto 60px;
+            padding: 0 24px;
+        }
+
+        .supermercado-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .supermercado-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .supermercado-logo {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+            background: #f5f5f5;
+        }
+
+        .no-logo {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .supermercado-info {
+            padding: 18px;
+        }
+
+        .supermercado-nombre {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #222;
+        }
+
+        .supermercado-detalle {
+            font-size: 0.875rem;
+            color: #777;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .btn-ver-productos {
+            display: inline-block;
+            margin-top: 12px;
+            background: var(--color-primary, #4CAF50);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .tienda-vacia {
+            text-align: center;
+            padding: 80px 20px;
+            color: #888;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:replace="~{Navbar :: navbar}"></div>
+
+    <div class="tienda-hero">
+        <h1>Nuestros <span>Supermercados</span></h1>
+        <p>Elige tu supermercado favorito y explora sus productos</p>
+    </div>
+
+    <!-- Grid de supermercados -->
+    <div class="supermercados-grid" th:unless="${#lists.isEmpty(supermercados)}">
+        <a class="supermercado-card" th:each="supermercado : ${supermercados}"
+            th:href="@{/supermercado/{id}(id=${supermercado.id})}">
+
+            <!-- Logo -->
+            <img class="supermercado-logo" th:if="${supermercado.logo != null and !supermercado.logo.isEmpty()}"
+                th:src="${supermercado.logo}" th:alt="${supermercado.nombre}" />
+            <div class="no-logo" th:unless="${supermercado.logo != null and !supermercado.logo.isEmpty()}">
+                🏪
+            </div>
+
+            <div class="supermercado-info">
+                <div class="supermercado-nombre" th:text="${supermercado.nombre}">Nombre</div>
+
+                <div class="supermercado-detalle"
+                    th:if="${supermercado.direccion != null and !supermercado.direccion.isEmpty()}">
+                    📍 <span th:text="${supermercado.direccion}">Dirección</span>
+                </div>
+
+                <div class="supermercado-detalle"
+                    th:if="${supermercado.telefono != null and !supermercado.telefono.isEmpty()}">
+                    📞 <span th:text="${supermercado.telefono}">Teléfono</span>
+                </div>
+
+                <span class="btn-ver-productos">Ver productos →</span>
+            </div>
+        </a>
+    </div>
+
+    <!-- Sin supermercados -->
+    <div class="tienda-vacia" th:if="${#lists.isEmpty(supermercados)}">
+        <p>No hay supermercados disponibles por el momento.</p>
+        <a th:href="@{/}">← Volver al inicio</a>
+    </div>
+
+</body>
+
+</html>

@@ -4,7 +4,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.chrissvg.miapp.model.Producto;
+import com.chrissvg.miapp.model.Supermercado;
 import com.chrissvg.miapp.service.ProductoService;
+import com.chrissvg.miapp.service.SupermercadoService;
 
 import org.springframework.ui.Model;
 import org.springframework.security.core.Authentication;
@@ -22,6 +24,8 @@ public class MainController {
 
     @Autowired
     private ProductoService productoService;
+    @Autowired
+    private SupermercadoService supermercadoService;
 
     // ── Método helper para no repetir código ──
     private void agregarDatosUsuario(Model model, Authentication authentication) {
@@ -79,4 +83,34 @@ public class MainController {
         return "creacuenta";
     }
 
+    @GetMapping("/tienda")
+    public String mostrarTienda(Model model, Authentication authentication) {
+        List<Supermercado> supermercados = supermercadoService.listarTodos();
+        model.addAttribute("supermercados", supermercados);
+        agregarDatosUsuario(model, authentication);
+        return "tienda";
+    }
+
+    @GetMapping("/supermercado/{id}")
+    public String verSupermercado(@PathVariable Long id,
+            Model model,
+            Authentication authentication) {
+
+        Supermercado supermercado = supermercadoService.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Supermercado no encontrado"));
+
+        List<Producto> productos = productoService.buscarPorSupermercado(id);
+
+        // Agrupar por categoría para mostrar secciones
+        Map<String, List<Producto>> porCategoria = productos.stream()
+                .filter(p -> p.getCategoria() != null && !p.getCategoria().isBlank())
+                .collect(Collectors.groupingBy(Producto::getCategoria));
+
+        model.addAttribute("supermercado", supermercado);
+        model.addAttribute("productos", productos);
+        model.addAttribute("categorias", porCategoria);
+        agregarDatosUsuario(model, authentication);
+
+        return "supermercado";
+    }
 }

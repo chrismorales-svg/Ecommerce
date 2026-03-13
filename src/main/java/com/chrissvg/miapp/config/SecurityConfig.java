@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import com.chrissvg.miapp.service.CustomOAuth2UserService;
 import com.chrissvg.miapp.service.UserDetailsServiceImpl;
 
 @Configuration
@@ -18,13 +19,17 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/creacuenta", "/css/**", "/js/**", "/images/**", "/api/**").permitAll()
+                        .requestMatchers("/login", "/creacuenta", "/css/**", "/js/**", "/images/**", "/api/**")
+                        .permitAll()
                         .requestMatchers("/superadmin/**").hasRole("SUPERADMIN")
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                         .requestMatchers("/usuario/**").hasAnyRole("USUARIO", "ADMIN", "SUPERADMIN")
@@ -36,11 +41,14 @@ public class SecurityConfig {
                         .permitAll())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
+                        .userInfoEndpoint(info -> info
+                                .userService(customOAuth2UserService) // ← añadir esto
+                        )
                         .defaultSuccessUrl("/", true))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true")
-                        .permitAll())
+                        .permitAll())   
                 .userDetailsService(userDetailsService);
 
         return http.build();

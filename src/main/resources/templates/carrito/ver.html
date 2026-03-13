@@ -211,7 +211,7 @@
         <div th:if="${mensaje}" class="alert-success" th:text="${mensaje}"></div>
 
         <!-- Carrito vacío -->
-        <div class="carrito-vacio" th:if="${carrito.items.empty}">
+        <div class="carrito-vacio" th:if="${#lists.isEmpty(carrito.items)}">
             <p>Tu carrito está vacío 😕</p>
             <a th:href="@{/}" class="btn-seguir">← Volver a la tienda</a>
         </div>

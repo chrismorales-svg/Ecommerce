@@ -26,9 +26,18 @@ public class CarritoService {
     /** Obtiene el carrito del usuario, o lo crea si no existe */
     public Carrito obtenerOCrearCarrito(String email) {
         Usuario usuario = usuarioRepo.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + email));
-        return carritoRepo.findByUsuario(usuario)
-                .orElseGet(() -> carritoRepo.save(new Carrito(usuario)));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Carrito carrito = carritoRepo.findByUsuario(usuario)
+                .orElseGet(() -> {
+                    Carrito nuevo = new Carrito(usuario);
+                    return carritoRepo.save(nuevo);
+                });
+
+        // Fuerza la carga de los items
+        carrito.getItems().size();
+
+        return carrito;
     }
 
     /** Agrega un producto al carrito. Si ya existe, incrementa la cantidad */

@@ -16,10 +16,11 @@ public class Carrito {
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<CarritoItem> items = new ArrayList<>();
 
-    public Carrito() {}
+    public Carrito() {
+    }
 
     public Carrito(Usuario usuario) {
         this.usuario = usuario;
@@ -32,12 +33,27 @@ public class Carrito {
                 .sum();
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public List<CarritoItem> getItems() { return items; }
-    public void setItems(List<CarritoItem> items) { this.items = items; }
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public List<CarritoItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<CarritoItem> items) {
+        this.items = items;
+    }
 }

@@ -144,10 +144,9 @@ public class Usuario {
 
     // ── Helper ───────────────────────────────────────────────────────
     public String getNombreCompleto() {
-        if (nombre != null && apellido != null)
-            return nombre + " " + apellido;
-        if (nombre != null)
-            return nombre;
-        return email;
+        if (nombre != null && !nombre.isBlank()) {
+            return apellido != null && !apellido.isBlank() ? nombre + " " + apellido : nombre;
+        }
+        return email != null && !email.isBlank() ? email : "Usuario";
     }
 }

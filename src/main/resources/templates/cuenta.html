@@ -212,7 +212,7 @@
         <!-- Header -->
         <div class="cuenta-header">
             <div class="cuenta-avatar"
-                th:text="${usuario.nombre != null ? usuario.nombre.substring(0,1).toUpperCase() : usuario.email.substring(0,1).toUpperCase()}">
+                th:text="${(usuario.nombre != null and !usuario.nombre.isEmpty()) ? usuario.nombre.substring(0,1).toUpperCase() : (usuario.email != null and !usuario.email.isEmpty()) ? usuario.email.substring(0,1).toUpperCase() : '?'}">
                 U
             </div>
             <div class="cuenta-header-info">

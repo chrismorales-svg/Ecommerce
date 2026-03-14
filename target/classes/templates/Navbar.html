@@ -21,12 +21,14 @@
                     <span class="user-name" th:text="${nombreUsuario}"></span>
                 </div>
                 <a href="/logout" class="btn-logout">Salir</a>
+                <a th:href="@{/cuenta}">Mi cuenta</a>
             </div>
 
             <!-- No logueado -->
             <div class="navbar-auth" sec:authorize="!isAuthenticated()">
                 <a href="/creacuenta">Crea tu cuenta</a>
                 <a href="/login" class="btn-login">Ingresa</a>
+                
             </div>
         </div>
 
@@ -36,6 +38,7 @@
                 <li><a href="/about">Ofertas</a></li>
                 <li><a href="/tienda">Supermercado</a></li>
                 <li><a href="/services">Moda</a></li>
+
             </ul>
             <ul class="navbar2">
                 <li>

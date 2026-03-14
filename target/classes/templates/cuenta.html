@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        .cuenta-container {
+            max-width: 900px;
+            margin: 40px auto 60px;
+            padding: 0 24px;
+        }
+
+        .cuenta-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 36px;
+        }
+
+        .cuenta-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary, #4CAF50), #2e7d32);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .cuenta-header-info h1 {
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+        }
+
+        .cuenta-header-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .cuenta-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .cuenta-card h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .form-group input {
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--color-primary, #4CAF50);
+        }
+
+        /* Mapa */
+        #mapa {
+            width: 100%;
+            height: 380px;
+            border-radius: 12px;
+            margin-top: 8px;
+            border: 1px solid #ddd;
+            z-index: 1;
+        }
+
+        .mapa-instruccion {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .coords-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .coord-box {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .coord-box span {
+            display: block;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #222;
+            margin-top: 2px;
+        }
+
+        .btn-ubicacion-actual {
+            background: white;
+            border: 1px solid var(--color-primary, #4CAF50);
+            color: var(--color-primary, #4CAF50);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn-ubicacion-actual:hover {
+            background: var(--color-primary, #4CAF50);
+            color: white;
+        }
+
+        .btn-guardar {
+            background: var(--color-primary, #4CAF50);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 32px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-guardar:hover {
+            opacity: 0.9;
+        }
+
+        .alerta-exito {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:replace="~{Navbar :: navbar}"></div>
+
+    <div class="cuenta-container">
+
+        <!-- Alerta éxito -->
+        <div class="alerta-exito" th:if="${exito}">
+            ✅ <span th:text="${exito}">Guardado</span>
+        </div>
+
+        <!-- Header -->
+        <div class="cuenta-header">
+            <div class="cuenta-avatar"
+                th:text="${usuario.nombre != null ? usuario.nombre.substring(0,1).toUpperCase() : usuario.email.substring(0,1).toUpperCase()}">
+                U
+            </div>
+            <div class="cuenta-header-info">
+                <h1 th:text="${usuario.nombreCompleto}">Mi Cuenta</h1>
+                <p th:text="${usuario.email}">email@example.com</p>
+            </div>
+        </div>
+
+        <form th:action="@{/cuenta/actualizar}" method="post">
+
+            <!-- Datos personales -->
+            <div class="cuenta-card">
+                <h2>👤 Datos personales</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" name="nombre" placeholder="Tu nombre" th:value="${usuario.nombre}" />
+                    </div>
+                    <div class="form-group">
+                        <label>Apellido</label>
+                        <input type="text" name="apellido" placeholder="Tu apellido" th:value="${usuario.apellido}" />
+                    </div>
+                    <div class="form-group">
+                        <label>Ciudad</label>
+                        <input type="text" name="ciudad" placeholder="Tu ciudad" th:value="${usuario.ciudad}" />
+                    </div>
+                    <div class="form-group">
+                        <label>Departamento</label>
+                        <input type="text" name="departamento" placeholder="Tu departamento"
+                            th:value="${usuario.departamento}" />
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="text" name="telefono" placeholder="Tu teléfono" th:value="${usuario.telefono}" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Geolocalización -->
+            <div class="cuenta-card">
+                <h2>📍 Mi ubicación</h2>
+
+                <button type="button" class="btn-ubicacion-actual" onclick="usarUbicacionActual()">
+                    🎯 Usar mi ubicación actual
+                </button>
+
+                <p class="mapa-instruccion">
+                    🖱️ Haz clic en el mapa para seleccionar tu punto exacto de entrega
+                </p>
+
+                <div id="mapa"></div>
+
+                <div class="coords-display">
+                    <div class="coord-box">
+                        Latitud
+                        <span id="lat-display" th:text="${usuario.latitud != null ? usuario.latitud : '—'}">—</span>
+                    </div>
+                    <div class="coord-box">
+                        Longitud
+                        <span id="lng-display" th:text="${usuario.longitud != null ? usuario.longitud : '—'}">—</span>
+                    </div>
+                </div>
+
+                <div class="form-group full-width" style="margin-top:12px;">
+                    <label>Dirección completa</label>
+                    <input type="text" name="direccionCompleta" id="direccionCompleta"
+                        placeholder="Calle, barrio, referencias..." th:value="${usuario.direccionCompleta}" />
+                </div>
+
+                <!-- Campos ocultos que se envían con el formulario -->
+                <input type="hidden" name="latitud" id="latitud" th:value="${usuario.latitud}" />
+                <input type="hidden" name="longitud" id="longitud" th:value="${usuario.longitud}" />
+            </div>
+
+            <button type="submit" class="btn-guardar">💾 Guardar cambios</button>
+        </form>
+
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script th:inline="javascript">
+        // Coordenadas guardadas del usuario (o Colombia por defecto)
+        const latGuardada = /*[[${usuario.latitud}]]*/ null;
+        const lngGuardada = /*[[${usuario.longitud}]]*/ null;
+
+        const centerLat = latGuardada || 4.7110;
+        const centerLng = lngGuardada || -74.0721;
+        const zoomInicial = latGuardada ? 15 : 6;
+
+        // Inicializar mapa
+        const mapa = L.map('mapa').setView([centerLat, centerLng], zoomInicial);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(mapa);
+
+        // Marcador
+        let marcador = null;
+
+        if (latGuardada && lngGuardada) {
+            marcador = L.marker([latGuardada, lngGuardada]).addTo(mapa);
+            actualizarDisplay(latGuardada, lngGuardada);
+        }
+
+        // Clic en el mapa
+        mapa.on('click', function (e) {
+            const { lat, lng } = e.latlng;
+            colocarMarcador(lat, lng);
+        });
+
+        function colocarMarcador(lat, lng) {
+            if (marcador) mapa.removeLayer(marcador);
+            marcador = L.marker([lat, lng]).addTo(mapa);
+            actualizarDisplay(lat, lng);
+        }
+
+        function actualizarDisplay(lat, lng) {
+            document.getElementById('lat-display').textContent = lat.toFixed(6);
+            document.getElementById('lng-display').textContent = lng.toFixed(6);
+            document.getElementById('latitud').value = lat.toFixed(6);
+            document.getElementById('longitud').value = lng.toFixed(6);
+        }
+
+        function usarUbicacionActual() {
+            if (!navigator.geolocation) {
+                alert('Tu navegador no soporta geolocalización');
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(
+                function (pos) {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    mapa.setView([lat, lng], 16);
+                    colocarMarcador(lat, lng);
+                },
+                function () {
+                    alert('No se pudo obtener tu ubicación. Verifica los permisos del navegador.');
+                }
+            );
+        }
+    </script>
+
+    <!-- Idempotencia -->
+    <script>
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                const btn = this.querySelector('button[type="submit"]');
+                if (!btn || btn.dataset.submitted === 'true') { e.preventDefault(); return; }
+                btn.dataset.submitted = 'true';
+                btn.disabled = true;
+                btn.textContent = '⏳ Guardando...';
+                setTimeout(() => { btn.disabled = false; btn.dataset.submitted = 'false'; btn.textContent = '💾 Guardar cambios'; }, 4000);
+            });
+        });
+    </script>
+
+</body>
+
+</html>

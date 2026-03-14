@@ -24,6 +24,7 @@ public class CarritoService {
     }
 
     /** Obtiene el carrito del usuario, o lo crea si no existe */
+    @Transactional
     public Carrito obtenerOCrearCarrito(String email) {
         Usuario usuario = usuarioRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -34,13 +35,16 @@ public class CarritoService {
                     return carritoRepo.save(nuevo);
                 });
 
-        // Fuerza la carga de los items
+        // Fuerza la carga de los items dentro de la transacción
         carrito.getItems().size();
 
         return carrito;
     }
 
-    /** Agrega un producto al carrito. Si ya existe, incrementa la cantidad */
+    /**
+     * Agrega un producto al carrito. Si ya existe, incrementa la cantidad
+     * (idempotente)
+     */
     @Transactional
     public void agregarProducto(String email, Long productoId, int cantidad) {
         Carrito carrito = obtenerOCrearCarrito(email);
@@ -49,7 +53,9 @@ public class CarritoService {
 
         itemRepo.findByCarritoAndProducto(carrito, producto)
                 .ifPresentOrElse(
+                        // ✅ Ya existe → solo suma la cantidad (doble clic seguro)
                         item -> item.setCantidad(item.getCantidad() + cantidad),
+                        // ✅ No existe → crea nuevo item
                         () -> itemRepo.save(new CarritoItem(carrito, producto, cantidad)));
     }
 

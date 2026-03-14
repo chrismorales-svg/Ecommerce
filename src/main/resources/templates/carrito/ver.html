@@ -200,6 +200,35 @@
     </style>
 </head>
 
+<script>
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function (e) {
+            const btn = this.querySelector('button[type="submit"]');
+            if (!btn) return;
+
+            // Si ya fue enviado, bloquea el segundo clic
+            if (btn.dataset.submitted === 'true') {
+                e.preventDefault();
+                return;
+            }
+
+            // Marca como enviado y deshabilita visualmente
+            btn.dataset.submitted = 'true';
+            btn.disabled = true;
+
+            const textoOriginal = btn.textContent;
+            btn.textContent = '⏳ Procesando...';
+
+            // Re-habilita después de 4 segundos por si hay error de red
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.dataset.submitted = 'false';
+                btn.textContent = textoOriginal;
+            }, 4000);
+        });
+    });
+</script>
+
 <body>
 
     <div th:replace="~{Navbar :: navbar}"></div>

@@ -26,27 +26,128 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
+    // ── Campos de perfil ─────────────────────────────────────────────
+    private String nombre;
+    private String apellido;
+    private String ciudad;
+    private String departamento;
+    private String telefono;
+
+    // ── Geolocalización ──────────────────────────────────────────────
+    private Double latitud;
+    private Double longitud;
+    private String direccionCompleta;
+
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "usuario_roles",
-        joinColumns = @JoinColumn(name = "usuario_id"),
-        inverseJoinColumns = @JoinColumn(name = "rol_id")
-    )
+    @JoinTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "rol_id"))
     private List<Rol> roles;
 
-    // Constructor vacío obligatorio para JPA
-    public Usuario() {}
+    public Usuario() {
+    }
 
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // ── Getters y Setters ────────────────────────────────────────────
+    public Long getId() {
+        return id;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public String getEmail() {
+        return email;
+    }
 
-    public List<Rol> getRoles() { return roles; }
-    public void setRoles(List<Rol> roles) { this.roles = roles; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
+
+    public String getDepartamento() {
+        return departamento;
+    }
+
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public Double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
+    }
+
+    public Double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
+    }
+
+    public String getDireccionCompleta() {
+        return direccionCompleta;
+    }
+
+    public void setDireccionCompleta(String direccionCompleta) {
+        this.direccionCompleta = direccionCompleta;
+    }
+
+    public List<Rol> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Rol> roles) {
+        this.roles = roles;
+    }
+
+    // ── Helper ───────────────────────────────────────────────────────
+    public String getNombreCompleto() {
+        if (nombre != null && apellido != null)
+            return nombre + " " + apellido;
+        if (nombre != null)
+            return nombre;
+        return email;
+    }
 }

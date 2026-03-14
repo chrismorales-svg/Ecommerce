@@ -150,3 +150,4 @@ public class Usuario {
         return email != null && !email.isBlank() ? email : "Usuario";
     }
 }
+
